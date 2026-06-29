@@ -38,12 +38,14 @@ def filter_md():
 
 #read file and store contents in a dictionary tree (may use a lot of memory i think?)
 
-def store_md(dir:Path):
+def store_md():
     md_dict = {}
 
-    for entry in dir.iterdir():
+    for entry in infilter_path.iterdir():
         md_dict[entry.stem] = []
 
         with open(entry, "r") as f:
             for line in f:
                 md_dict[entry.stem].append(line)
+
+    return md_dict

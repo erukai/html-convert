@@ -21,4 +21,4 @@
 
 - non-text:
     - horizontal rule
-    - line break (empty line)
+    - line break (empty line) -> just use `<br>`
