@@ -1,6 +1,6 @@
 ### Running the Script
 
-1. The script or program is meant to be run with a CLI _("command line interface")_.
+1. The script or program is meant to be run through the batch file `activate.bat`
 2. Clicking `activate.bat` will open a terminal using your computer's default shell program _(e.g. Command Prompt, PowerShell, Bash, etc.)_.
 3. The terminal will prompt you to either:
     - enter the absolute path of the Markdown file you want to convert

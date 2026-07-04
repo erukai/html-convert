@@ -1,24 +1,24 @@
 ### Markdown Elements
 
 - text:
-    - header
+    - header (#)
     - paragraph
 
 - styles:
-    - bold
-    - italic
-    - strikethrough
-    - code
-    - code block
-    - block quote
-    - link
-    - subscript
-    - superscript
+    - bold (**) ///
+    - italic (* / _) //
+    - strikethrough (~~)
+    - code (`)
+    - code block (```)
+    - block quote (>)
+    - link ([]())
+    - subscript (~)
+    - superscript (^)
 
 - list:
-    - ordered list
-    - unordered list
+    - ordered list (1.)
+    - unordered list (-)
 
 - non-text:
-    - horizontal rule
+    - horizontal rule (---)
     - line break (empty line) -> just use `<br>`

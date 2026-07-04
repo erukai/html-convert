@@ -1,5 +1,6 @@
 # Ignore all contents inside the folder
 convert/*
+tests
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

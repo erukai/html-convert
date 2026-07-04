@@ -10,6 +10,9 @@ inraw_path = convert_path / "input-raw"
 
 #---
 
+def copy_paste(): #copy file/folder path from input and paste to /convert/
+    pass
+
 #get files from convert folder
 
 def filter_md():
