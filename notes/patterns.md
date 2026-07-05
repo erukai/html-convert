@@ -1,23 +1,23 @@
 ### Opening Delimiter ✅
 - pattern: delimiter
-- before pattern: whitespace(s) OR start of string
+- before pattern: any character OR whitespace(s) OR start of string
 - after pattern: any character EXCEPT whitespace(s) or end of string
 
 ### Closing Delimiter ✅
 - pattern: delimiter
 - before pattern: any character EXCEPT whitespace(s) or start of string
-- after pattern: whitespace(s) OR end of string
+- after pattern: any character OR whitespace(s) OR end of string
 
 ---
 
 ### Opening Delimiter (subscript & superscript)
 - pattern: delimiter
 - before pattern: any character OR whitespace(s) OR start of string
-- after pattern: any character EXCEPT whitespace(s) or end of string
+- after pattern: any character(s) EXCEPT whitespace(s) or end of string UNTIL closing delimiter
 
 ### Closing Delimiter (subscript & superscript)
 - pattern: delimiter
-- before pattern: any character EXCEPT whitespace(s) or start of string
+- before pattern: any character(s) EXCEPT whitespace(s) or end of string FROM opening delimiter
 - after pattern: any character OR whitespace(s) OR end of string
 
 ---

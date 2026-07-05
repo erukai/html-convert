@@ -27,10 +27,13 @@
 
 
 ### Parsing Emphasis (bold and italic)
-- current char: *
+- current char: * ✅
 - check next char:
-    - if *: might be bold
+    - if *: might be bold ✅
         check next char:
             - if *: it is both bold and italic
             - if not * and not space / end of line: it is bold
     - if not * and not space / end of line: it is italic
+
+
+[~aijas~](https://google.com)
