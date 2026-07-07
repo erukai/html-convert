@@ -39,5 +39,6 @@
 Everytime parsing open:
 - check if it is already open or not
 - check if there's a character after the delimiter
+- check if parsing if still True
 
 if no closing delimiter, put closing delimiter at the end of line _(using the order in the delimiter stack)_

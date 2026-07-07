@@ -110,31 +110,36 @@ class MarkdownParser:
 
     #when used on a ParserState variable (is_...):
     #- return the state to False
-    #- del the state in delimiter_stack (must use roundabout method to get the name of the variable)
-    #- pop the state coord list (must use roundabout method)
-    def _remove(self, **state: dict[str, bool]): #roundabout method 1: pack in a dictionary to get key-value pair
-        '''example:\n
-        state = `{"is_bold": self.state.is_bold}`\n
-        state_key = `is_bold` (type: str)\n
-        state_value = `self.state.is_bold` (type: MarkdownParser -> ParserState -> bool)'''
+    #- del the state in delimiter_stack
+    #- pop the state coord list
+    def _remove(self, attr_name: str):
 
-        if len(state) != 1:
-            raise ValueError("state provided must be 1")
+        #delimiter_stack does not count because the argument `state` is only for bool states
+        not_is_states = ["text, parsing"]
 
-        #convert the single-item dictionary into a list, then unpack the single-item list into a string (key only)
-        state_key = list(state.keys())[0] #using list() turns it into a string
-        state_value = next(iter(state.values())) #this one doesn't use list(), so it still references the original value of `state`
-        
-        #---
+        #custom Exception handler
+        if (
+            attr_name not in self.dir_data_attr(self.state) 
+            or (not attr_name.startswith("is_") and attr_name not in not_is_states)
+        ):
+            raise AttributeError("state ptovided is not a valid ParserState attribute")
 
-        not_is_states = ["text, parsing"] #delimiter_stack does not count because the argument `state` is only expected to be a bool
-        if state_key not in self.dir_data_attr(ParserState) or (not state_key.startswith("is_") and state_key not in not_is_states):
-            raise NameError("state ptovided is not a valid ParserState data attribute")
-        
-        else:
-            value_name = f'self.state.{state_key}' #inject
-            state_value = False
-            self.state.delimiter_stack.remove()
+        else: #proceed with main process
+            #return state to False
+            if getattr(self.state, attr_name) != False: #in case the value is not only True but also None
+                setattr(self.state, attr_name, False)
+
+            #remove state in delimiter stack (hard coded but safe since there is only 1 delimiter_stack attr)
+            state = attr_name[3:].upper()
+            if state in self.state.delimiter_stack:
+                self.state.delimiter_stack.reverse()
+                self.state.delimiter_stack.remove(state)
+                self.state.delimiter_stack.reverse()
+
+            #pop state coord list (hard coded, kind of unsafe since attr is not known)
+            coord_name = f"{attr_name[3:]}_coord"
+            coord_attr = getattr(self.state, coord_name)
+            coord_attr.pop()
 
     #---
 
