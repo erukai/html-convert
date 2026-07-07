@@ -119,12 +119,12 @@ class MarkdownParser:
 
         #custom Exception handler
         if (
-            attr_name not in self.dir_data_attr(self.state) 
+            attr_name not in self.dir_getattr(self.state) 
             or (not attr_name.startswith("is_") and attr_name not in not_is_states)
         ):
             raise AttributeError("state ptovided is not a valid ParserState attribute")
 
-        else: #proceed with main process
+        else:
             #return state to False
             if getattr(self.state, attr_name) != False: #in case the value is not only True but also None
                 setattr(self.state, attr_name, False)
@@ -149,7 +149,7 @@ class MarkdownParser:
         #the position is a character and NOT a whitespace / end of line / start of line
         return re.fullmatch(r"\S", pos)
     
-    def dir_data_attr(self, obj) -> list: #`obj` also works with class, not necessarily an instance
+    def dir_getattr(self, obj) -> list: #`obj` also works with class, not necessarily an instance
         return [name for name in dir(obj) if not callable(getattr(obj, name)) and not name.startswith("__")]
 
     #---
@@ -168,10 +168,8 @@ class MarkdownParser:
             #end of line:
             self.cursor = 0
             self.ln += 1
-            
 
-
-
+        ...
 
     def _parse_check(self, char):
         #some formatting only works if the symbol is at the start of the line.
@@ -182,28 +180,28 @@ class MarkdownParser:
                 self._fork_asterisk()                 
 
             case "_":
-                _fork_underscore(self)
+                self._fork_underscore()
 
             case "~":
-                _fork_tilde(self)
+                self._fork_tilde()
 
             case "`":
-                _fork_backtick(self)
+                self._fork_backtick()
 
             case "-":
-                _fork_hyphen(self)
+                self._fork_hyphen()
 
             case "#" if self.cursor == 0:
-                _parse_header(self)
+                self._parse_heading()
 
             case ">" if self.cursor == 0:
-                _parse_quote(self)
+                self._parse_quote()
 
             case "^":
-                _parse_sup(self)
+                self._parse_sup()
 
-            case "()": #special case, change later
-                _parse_link(self)
+            case "(": #special case
+                self._parse_link()
 
             case _: #not a formatting character
                 return
@@ -230,12 +228,28 @@ class MarkdownParser:
                 self.state.delimiter_stack.append("ITALIC")
                 self.state.is_italic = True
 
+    #---
 
+    def _fork_underscore(self):
+        pass
 
+    def _fork_tilde(self):
+        pass
 
+    def _fork_backtick(self):
+        pass
 
+    def _fork_hyphen(self):
+        pass
 
+    def _parse_heading(self):
+        pass
 
+    def _parse_quote(self):
+        pass
+
+    def _parse_sup(self):
+        pass
 
 
     #unlike other parsers, link parser checks the entire line in advance (using regex) for link formatting,
@@ -257,7 +271,7 @@ class ParserState():
         self.delimiter_stack = []
 
         #entire line
-        self.is_header = False
+        self.is_heading = False
         self.is_quote = False
         self.is_hr = False
 
@@ -277,53 +291,7 @@ class ParserState():
 
         #---
 
+        self.heading_coord = [] #(list[tuple]) --> (line, heading_num)
         self.link_coord = [] #(list[tuple]) --> (line_start, column_start, line_end, column_end)
 
 #----------
-
-def fork_underscore(line, i):
-    pass
-
-def fork_tilde(line, i): #strikethrough, subscript
-    pass
-
-def fork_backtick(line, i): #code, code block
-    pass
-
-def fork_hyphen(line, i): #unordered list, horizontal rulek
-    pass
-
-'''
-
-#---
-
-def parse_hr(line):
-    pattern =  r'(?:(?<=\s)|(?<=^))(-{3,})(?:(?<=\s)|(?<=$))'
-
-    match = re.match(pattern, line)
-
-#---
-
-def parse_italic(line, i):
-    
-
-    #if found closing tag
-    pass
-
-def parse_header(line, i):
-    pass
-
-def parse_quote(line, i):
-    pass
-
-def parse_sup(line, i):
-    pass
-
-def parse_link(line, i):
-    pass
-
-def parse_ol(line, i):
-    pass
-
-#---
-'''

@@ -36,9 +36,10 @@
     - if not * and not space / end of line: it is italic
 
 
-Everytime parsing open:
-- check if it is already open or not
-- check if there's a character after the delimiter
-- check if parsing if still True
+Everytime parsing:
+- check whether it is already open (e.g. `is_bold = True`, `delimiter_stack = [..., 'BOLD']`)
+- check if there's a character after/before the delimiter 
+- check for `parsing = True`
+- use `turn(1)` to see if there's an escape character
 
 if no closing delimiter, put closing delimiter at the end of line _(using the order in the delimiter stack)_

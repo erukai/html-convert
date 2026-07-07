@@ -1,7 +1,7 @@
 ### Markdown Elements
 
 - text:
-    - header (#)
+    - heading (#)
     - paragraph
 
 - styles:

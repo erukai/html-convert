@@ -32,7 +32,7 @@
 - before pattern: whitespace(s) OR start of string
 - after pattern: any character OR whitespace(s) OR end of string
 
-### header
+### heading
 - pattern: `#`, `##`, `###`, `####`, `#####`, `######`
 - before pattern: whitespace(s) OR start of string
 - after pattern: whitespace(s), any character
