@@ -36,4 +36,8 @@
     - if not * and not space / end of line: it is italic
 
 
-[~aijas~](https://google.com)
+Everytime parsing open:
+- check if it is already open or not
+- check if there's a character after the delimiter
+
+if no closing delimiter, put closing delimiter at the end of line _(using the order in the delimiter stack)_
