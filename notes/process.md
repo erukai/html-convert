@@ -1,4 +1,4 @@
-### Running the Program
+### Running the Program ✅
 1. run `activate.bat`
 2. the batch script opens a terminal window and waits for input
 3. if a markdown file or a folder is not received, cancel progress and wait for input again _(until timeout after 120 seconds.)_
@@ -6,7 +6,7 @@
 
 ---
 
-### Filter Files / Folders
+### Filter Files / Folders ✅
 1. open `convert/input-raw/`
 2. iterate through contents
     -  if content is a file:
@@ -15,7 +15,7 @@
     - if content is a folder, repeat step 2
 
 
-### Store Files Contents
+### Store Files Contents ✅
 1. create an empty dictionary `md_files = {}`
 2. open `convert/input-filtered`
 3. iterate through contents _(`.md` files)_

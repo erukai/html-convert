@@ -35,6 +35,9 @@ class MarkdownParser:
 
     #---
     
+    def _escape(self):
+        pass
+
     def _ignore_parse(self):
         if self.state.is_code or self.state.is_code_fence or self.state.is_link_url:
             self.state.parsing = False
@@ -143,11 +146,11 @@ class MarkdownParser:
 
     #---
 
-    def _is_char(self, i: int) -> re.Match | None: #i = relative cursor index
+    def _has_char(self, i: int) -> bool: #i = relative cursor index
         pos = self.text[self.cursor+i]
 
         #the position is a character and NOT a whitespace / end of line / start of line
-        return re.fullmatch(r"\S", pos)
+        return True if re.fullmatch(r"\S", pos) else False
     
     def dir_getattr(self, obj) -> list: #`obj` also works with class, not necessarily an instance
         return [name for name in dir(obj) if not callable(getattr(obj, name)) and not name.startswith("__")]
@@ -176,6 +179,9 @@ class MarkdownParser:
         #if current cursor is NOT at the start, ignore those formattings
 
         match self._current():
+            case "\\": #escape the next character
+                self._escape()
+
             case "*":
                 self._fork_asterisk()                 
 
@@ -209,7 +215,7 @@ class MarkdownParser:
     #---
 
     def _fork_asterisk(self):
-        if self._peek(2) == "**" and self._is_char(3): #***\S
+        if self._peek(2) == "**" and self._has_char(3): #***\S
             if self.state.is_bold is False and self.state.is_italic is False:
                 self.state.delimiter_stack.append("BOLD_ITALIC")
                 self.state.is_bold = True
@@ -218,12 +224,12 @@ class MarkdownParser:
             '''else:
                 self._remove(is_bold=self.state.is_bold)'''
 
-        elif self._peek(1) == "*" and self._is_char(2): #**\S
+        elif self._peek(1) == "*" and self._has_char(2): #**\S
             if self.state.is_bold is False:
                 self.state.delimiter_stack.append("BOLD")
                 self.state.is_bold = True
 
-        elif self._is_char(1): #*\S
+        elif self._has_char(1): #*\S
             if self.state.is_italic is False:
                 self.state.delimiter_stack.append("ITALIC")
                 self.state.is_italic = True
@@ -292,6 +298,9 @@ class ParserState():
         #---
 
         self.heading_coord = [] #(list[tuple]) --> (line, heading_num)
+
+
+        self.bold_coord = []
         self.link_coord = [] #(list[tuple]) --> (line_start, column_start, line_end, column_end)
 
 #----------
