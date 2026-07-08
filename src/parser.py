@@ -304,3 +304,36 @@ class ParserState():
         self.link_coord = [] #(list[tuple]) --> (line_start, column_start, line_end, column_end)
 
 #----------
+
+
+class Node:
+    pass
+
+class Heading(Node):
+    def __init__(self, level, text):
+        self.level = level
+        self.text = text
+
+class Bold(Node):
+    def __init__(self, text):
+        self.text = text
+
+class Paragraph(Node):
+    def __init__(self, children):
+        self.children = children
+
+def parse_line(line):
+
+    if line.startswith("#"):
+        level = len(line.split(" ")[0]) '''['#', 'This', is the heading]'''
+        text = line[level+1:]
+        return Heading(level, text)
+    
+    elif line.startswith("**") and line.endswith("**"):
+        return Paragraph([Bold(line[2:-2])])
+    
+    else:
+        return Paragraph([line])
+
+# Example usage
+ast = [parse_line("# Title"), parse_line("**bold**")]
