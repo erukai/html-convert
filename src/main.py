@@ -3,7 +3,7 @@ from pathlib import Path
 
 import filtering
 import parser
-import injection
+import renderer
 
 #wait for file/folder input
 def file_input():
@@ -32,4 +32,4 @@ md_dict = filtering.store_md()
 html_dict = parser.parse_md(md_dict, convert_num)
 
 
-#injecting
+#rendering

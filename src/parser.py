@@ -33,6 +33,8 @@ class MarkdownParser:
         self.state = ParserState()
         self.text = None
 
+        self.ast = []
+
     #---
     
     def _escape(self):
@@ -146,8 +148,22 @@ class MarkdownParser:
 
     #---
 
-    def _has_char(self, i: int) -> bool: #i = relative cursor index
-        pos = self.text[self.cursor+i]
+    def _has_char(self, i: int=None, r: int=None):
+        '''i = absolute index (`text[i]`)\n
+        r = index relative to cursor (`text[cursor+r]`)\n
+        pass either `i` or `r` as an argument, not both nor none'''
+
+        if i and r:
+            raise Exception("function expects 1 keyword argument, received 2")
+
+        elif not i and not r:
+            raise Exception("function expects 1 keyword argument, received 0")
+
+        elif i:
+            pos = self.text[i]
+
+        elif r:
+            pos = self.text[self.cursor+r]
 
         #the position is a character and NOT a whitespace / end of line / start of line
         return True if re.fullmatch(r"\S", pos) else False
@@ -163,10 +179,8 @@ class MarkdownParser:
             self.text = line
 
             while self.cursor < len(self.text):
-                char = self.text[self.cursor]
-
-                self._parse_check(char)
-                self._advance()
+                self._parse_char() #parse current char
+                self._advance() #move cursor
 
             #end of line:
             self.cursor = 0
@@ -174,7 +188,7 @@ class MarkdownParser:
 
         ...
 
-    def _parse_check(self, char):
+    def _parse_char(self):
         #some formatting only works if the symbol is at the start of the line.
         #if current cursor is NOT at the start, ignore those formattings
 
@@ -215,7 +229,7 @@ class MarkdownParser:
     #---
 
     def _fork_asterisk(self):
-        if self._peek(2) == "**" and self._has_char(3): #***\S
+        if self._peek(2) == "**" and self._has_char(r=3): #***\S
             if self.state.is_bold is False and self.state.is_italic is False:
                 self.state.delimiter_stack.append("BOLD_ITALIC")
                 self.state.is_bold = True
@@ -224,15 +238,17 @@ class MarkdownParser:
             '''else:
                 self._remove(is_bold=self.state.is_bold)'''
 
-        elif self._peek(1) == "*" and self._has_char(2): #**\S
+        elif self._peek(1) == "*" and self._has_char(r=2): #**\S
             if self.state.is_bold is False:
                 self.state.delimiter_stack.append("BOLD")
                 self.state.is_bold = True
 
-        elif self._has_char(1): #*\S
+        elif self._has_char(r=1): #*\S
             if self.state.is_italic is False:
                 self.state.delimiter_stack.append("ITALIC")
                 self.state.is_italic = True
+
+                #self.ast.append(Italic())
 
     #---
 
@@ -304,36 +320,3 @@ class ParserState():
         self.link_coord = [] #(list[tuple]) --> (line_start, column_start, line_end, column_end)
 
 #----------
-
-
-class Node:
-    pass
-
-class Heading(Node):
-    def __init__(self, level, text):
-        self.level = level
-        self.text = text
-
-class Bold(Node):
-    def __init__(self, text):
-        self.text = text
-
-class Paragraph(Node):
-    def __init__(self, children):
-        self.children = children
-
-def parse_line(line):
-
-    if line.startswith("#"):
-        level = len(line.split(" ")[0]) '''['#', 'This', is the heading]'''
-        text = line[level+1:]
-        return Heading(level, text)
-    
-    elif line.startswith("**") and line.endswith("**"):
-        return Paragraph([Bold(line[2:-2])])
-    
-    else:
-        return Paragraph([line])
-
-# Example usage
-ast = [parse_line("# Title"), parse_line("**bold**")]
